@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Per-environment identities for side-by-side installs (dev, stg, prd on one
+  machine). Included by StonkAgents.wxs (MSI) and StonkAgentsBundle.wxs.
+  The Go side of the same table is internal/installenv; keep them in step
+  (internal/installenv/installenv_test.go pins the production values).
+
+  Environment comes from the build: scripts/build-msi.ps1 -Environment dev|stg|prd
+  (derived from the tracker URL when omitted) -> dotnet build -p:Environment=...
+  Production keeps every name, folder, port and UpgradeCode it has always had,
+  so existing installs upgrade in place exactly as before.
+
+  DataDirName is the per-user folder under PersonalFolder (Documents) that holds
+  secrets.env, config data and the SQLite databases.
+
+  Component GUIDs: production keeps its explicit GUIDs. Dev and stg use "*"
+  (WiX derives a stable GUID from the target path), which is what the
+  component rules require for the same files installed to different folders.
+-->
+<Include>
+  <?ifndef Environment?><?define Environment = "prd"?><?endif?>
+
+  <?if $(var.Environment) = "dev"?>
+    <?define ProductName = "StonkAgents Dev"?>
+    <?define InstallDirName = "StonkAgents Dev"?>
+    <?define DataDirName = ".stonkagents-dev"?>
+    <?define MsiUpgradeCode = "7F4C9E53-A06D-4B8C-9E3F-5D7A9B2C4E63"?>
+    <?define BundleUpgradeCode = "8A5DAF64-B17E-4C9D-AF40-6E8BAC3D5F74"?>
+    <?define DaemonService = "stonkagents-daemon-dev"?>
+    <?define ControllerService = "stonkagents-controller-dev"?>
+    <?define FirewallRule = "StonkAgents Dev Agent"?>
+    <?define RegistryKey = "SOFTWARE\StonkAgents Dev"?>
+    <?define CliWrapperName = "stonkagents-dev.cmd"?>
+    <?define ShortcutRegistryKey = "SOFTWARE\StonkAgents Dev"?>
+    <?define DaemonPort = "7861"?>
+    <?define ControllerPort = "7860"?>
+    <?define GuidDaemonExe = "*"?>
+    <?define GuidSvcWrapExe = "*"?>
+    <?define GuidControllerSvcExe = "*"?>
+    <?define GuidLauncherScript = "*"?>
+    <?define GuidGenkeysExe = "*"?>
+    <?define GuidSetupHelperExe = "*"?>
+    <?define GuidPostInstallScript = "*"?>
+    <?define GuidCommandToolsExe = "*"?>
+    <?define GuidGatewaySetupExe = "*"?>
+    <?define GuidEnvPath = "*"?>
+    <?define GuidCliWrapper = "*"?>
+    <?define GuidStartMenuShortcut = "*"?>
+    <?define GuidCommandToolsShortcut = "*"?>
+  <?elseif $(var.Environment) = "stg"?>
+    <?define ProductName = "StonkAgents Staging"?>
+    <?define InstallDirName = "StonkAgents Staging"?>
+    <?define DataDirName = ".stonkagents-stg"?>
+    <?define MsiUpgradeCode = "5D2A7C31-8E4B-4F6A-9C1D-3B5E7F9A2C41"?>
+    <?define BundleUpgradeCode = "6E3B8D42-9F5C-4A7B-8D2E-4C6F8A1B3D52"?>
+    <?define DaemonService = "stonkagents-daemon-stg"?>
+    <?define ControllerService = "stonkagents-controller-stg"?>
+    <?define FirewallRule = "StonkAgents Staging Agent"?>
+    <?define RegistryKey = "SOFTWARE\StonkAgents Staging"?>
+    <?define CliWrapperName = "stonkagents-stg.cmd"?>
+    <?define ShortcutRegistryKey = "SOFTWARE\StonkAgents Staging"?>
+    <?define DaemonPort = "7851"?>
+    <?define ControllerPort = "7850"?>
+    <?define GuidDaemonExe = "*"?>
+    <?define GuidSvcWrapExe = "*"?>
+    <?define GuidControllerSvcExe = "*"?>
+    <?define GuidLauncherScript = "*"?>
+    <?define GuidGenkeysExe = "*"?>
+    <?define GuidSetupHelperExe = "*"?>
+    <?define GuidPostInstallScript = "*"?>
+    <?define GuidCommandToolsExe = "*"?>
+    <?define GuidGatewaySetupExe = "*"?>
+    <?define GuidEnvPath = "*"?>
+    <?define GuidCliWrapper = "*"?>
+    <?define GuidStartMenuShortcut = "*"?>
+    <?define GuidCommandToolsShortcut = "*"?>
+  <?elseif $(var.Environment) = "prd"?>
+    <?define ProductName = "StonkAgents"?>
+    <?define InstallDirName = "StonkAgents"?>
+    <?define DataDirName = ".stonkagents"?>
+    <?define MsiUpgradeCode = "B7E8E8A1-9C2D-4E5F-8A3B-1D2C3E4F5A6B"?>
+    <?define BundleUpgradeCode = "C8D9E0F1-2A3B-4C5D-6E7F-8A9B0C1D2E3F"?>
+    <?define DaemonService = "StonkAgentsDaemon"?>
+    <?define ControllerService = "StonkAgentsController"?>
+    <?define FirewallRule = "StonkAgents Agent"?>
+    <?define RegistryKey = "SOFTWARE\StonkAgents"?>
+    <?define CliWrapperName = "stonkagents.cmd"?>
+    <?define ShortcutRegistryKey = "SOFTWARE\StonkAgents"?>
+    <?define DaemonPort = "7841"?>
+    <?define ControllerPort = "7840"?>
+    <?define GuidDaemonExe = "A1B2C3D4-E5F6-4A5B-8C9D-0E1F2A3B4C5D"?>
+    <?define GuidSvcWrapExe = "F6A7B8C9-D0E1-9F2A-3B4C-5D6E7F8A9B0C"?>
+    <?define GuidControllerSvcExe = "A0B1C2D3-E4F5-6A7B-8C9D-0E1F2A3B4C5D"?>
+    <?define GuidLauncherScript = "B2C3D4E5-F6A7-5B6C-9D0E-1F2A3B4C5D6E"?>
+    <?define GuidGenkeysExe = "C3D4E5F6-A7B8-6C7D-0E1F-2A3B4C5D6E7F"?>
+    <?define GuidSetupHelperExe = "D4E5F6A7-B8C9-7D8E-1F2A-3B4C5D6E7F8A"?>
+    <?define GuidPostInstallScript = "F720A603-56A8-4AFF-A8BE-65C40B05A381"?>
+    <?define GuidCommandToolsExe = "07E6553D-C8E0-4D8C-821F-05E3F015C870"?>
+    <?define GuidGatewaySetupExe = "9E2018F2-E09F-4E96-97A8-7CF5C0F49D20"?>
+    <?define GuidEnvPath = "F1E2D3C4-B5A6-4789-8C0D-1E2F3A4B5C6D"?>
+    <?define GuidCliWrapper = "0A1B2C3D-4E5F-6071-8293-A4B5C6D7E8F9"?>
+    <?define GuidStartMenuShortcut = "E5F6A7B8-C9D0-8E9F-2A3B-4C5D6E7F8A9B"?>
+    <?define GuidCommandToolsShortcut = "A9B8C7D6-E5F4-3A2B-1C0D-9E8F7A6B5C4D"?>
+  <?else?>
+    <?error Environment must be dev, stg or prd (got $(var.Environment))?>
+  <?endif?>
+
+  <!-- The scheduled task that installs the command tools in the background after setup
+       (internal/commandtools.TaskName): setuphelper registers and starts it, the uninstaller
+       deletes it. -->
+  <?define CommandToolsTask = "$(var.ProductName) command tools"?>
+</Include>

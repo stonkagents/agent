@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+
+# Build output
+bin/
+build/
+dist/
+coverage/
+installer/wix/build/
+installer/wix/obj/
+installer/wix/bin/
+installer/macos/.build/
+tools/stonkagents-notify/stonkagents-notify
+packages/
+/daemon
+*.exe
+*.exe~
+*.dll
+*.dylib
+*.test
+*.out
+go.work
+
+# Environment and secrets
+.env
+.env.*
+*.env
+*release-key
+keys/
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+.stonkagents/
+tmp/
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/

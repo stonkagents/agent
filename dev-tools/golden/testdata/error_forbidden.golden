@@ -1,0 +1,14 @@
+# POST /api/v1/share
+# Status: Forbidden (403)
+# Content-Type: application/json
+
+{
+  "error": {
+    "code": "FORBIDDEN",
+    "details": {
+      "required_role": "daemon",
+      "user_role": "client"
+    },
+    "message": "Insufficient privileges: requires daemon role"
+  }
+}

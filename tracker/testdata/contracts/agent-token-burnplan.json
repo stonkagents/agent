@@ -1,0 +1,34 @@
+{
+  "method": "GET",
+  "path": "/api/v1/agent-token/burnplan",
+  "status": 200,
+  "response": {
+    "mint": "3hmiRZikDbAH9BKnK65RHcR5TtqfUB6aLzeVMaiRdiGW",
+    "total": 1000000000,
+    "planTotal": 50000000,
+    "burned": 1250000,
+    "remaining": 998750000,
+    "burns": 2,
+    "next": {
+      "at": "2026-09-18T10:00:00Z",
+      "amount": 500000
+    },
+    "schedule": {
+      "intervalSeconds": 604800,
+      "startAt": null,
+      "amount": 500000
+    },
+    "recent": [
+      {
+        "at": "2026-09-11T10:00:00Z",
+        "amount": 250000,
+        "sig": "2E1WnTrjDqrqJcUGbdoPo8YnVKis12Ctrz5RZK4m2xiXgSEs2X4CtSEtMJNu4PVDcBHRENAC3SXdkM3VeqWNFyXw"
+      },
+      {
+        "at": "2026-09-09T10:00:00Z",
+        "amount": 1000000,
+        "sig": "2CrX3pmiZqAccBPgghX56Q2k68MHnuUpiuVRQT4ERDEWfMRb5NMnVNAtFS3npT64Q7BptZWkW31csuzQ1vcu8wzA"
+      }
+    ]
+  }
+}

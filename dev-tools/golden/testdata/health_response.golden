@@ -1,0 +1,8 @@
+# GET /health
+# Status: OK (200)
+# Content-Type: application/json
+
+{
+  "status": "healthy",
+  "version": "0.1.0"
+}

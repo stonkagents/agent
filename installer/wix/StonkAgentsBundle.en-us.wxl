@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  StonkAgents Burn bundle UI strings (referenced by StonkAgentsBundle.wxs).
+
+  This is a COMPLETE replacement for the upstream WiX HyperlinkTheme.wxl
+  default localization. The Burn loader replaces (does not merge) the
+  default strings when LocalizationFile is set, so every string the theme
+  references must be defined here or it shows as raw "#(loc.X)" in the UI.
+
+  Reference: https://github.com/wixtoolset/wix (src/ext/Bal/stdbas/Resources/HyperlinkTheme.wxl)
+
+  StonkAgents-specific overrides:
+   - Welcome page (InstallHeader / InstallMessage*)
+   - License link text (no real license; link shadows the portal URL only)
+   - Success page header / restart text (the "Next in the StonkAgents portal" copy)
+   - Success Launch button label ("Open portal")
+-->
+<WixLocalization Culture="en-us" Language="1033" xmlns="http://wixtoolset.org/schemas/v4/wxl">
+  <String Id="Caption" Value="[WixBundleName] Setup" />
+  <String Id="Title" Value="[WixBundleName]" />
+
+  <String Id="CheckingForUpdatesLabel" Value="Checking for updates" />
+  <String Id="UpdateButton" Value="&amp;Update to version [WixStdBAUpdateAvailable]" />
+
+  <!--
+    Welcome / install page. Mirrors the macOS DMG's WelcomeView
+    "What to expect" bullets, adapted for Windows (UAC instead of sudo,
+    Windows Defender instead of macOS background permissions).
+  -->
+  <String Id="InstallHeader" Value="Welcome to [WixBundleName]" />
+  <String Id="InstallMessage" Value="The first P2P Network for agents.&#xA;&#xA;What to expect:&#xA;  • If Node.js is missing, Windows will ask for admin once to install it.&#xA;  • Setup takes 1 to 2 minutes. The command tools finish in the background afterwards.&#xA;  • Windows may prompt you to allow StonkAgents through the firewall so peers can reach it." />
+  <String Id="InstallMessageOptions" Value="The first P2P Network for agents.&#xA;&#xA;What to expect:&#xA;  • If Node.js is missing, Windows will ask for admin once to install it.&#xA;  • Setup takes 1 to 2 minutes. The command tools finish in the background afterwards.&#xA;  • Windows may prompt you to allow StonkAgents through the firewall so peers can reach it." />
+  <String Id="InstallVersion" Value="Version [WixBundleVersion]" />
+  <String Id="ConfirmCancelMessage" Value="Are you sure you want to cancel?" />
+  <String Id="ExecuteUpgradeRelatedBundleMessage" Value="Previous version" />
+
+  <String Id="HelpHeader" Value="Setup Help" />
+  <String Id="HelpText" Value="/install | /repair | /uninstall | /layout [directory] - installs, repairs, uninstalls or&#xA;   creates a complete local copy of the bundle in directory. Install is the default.&#xA;&#xA;/passive | /quiet -  displays minimal UI with no prompts or displays no UI and&#xA;   no prompts. By default UI and all prompts are displayed.&#xA;&#xA;/norestart   - suppress any attempts to restart. By default UI will prompt before restart.&#xA;/log log.txt - logs to a specific file. By default a log file is created in %TEMP%." />
+  <String Id="HelpCloseButton" Value="&amp;Close" />
+
+  <String Id="InstallLicenseLinkText" Value="By installing you accept the &lt;a href=&quot;#&quot;&gt;StonkAgents terms&lt;/a&gt;." />
+  <String Id="InstallAcceptCheckbox" Value="I &amp;agree to the terms" />
+  <String Id="InstallOptionsButton" Value="&amp;Options" />
+  <String Id="InstallInstallButton" Value="&amp;Install" />
+  <String Id="InstallCancelButton" Value="&amp;Cancel" />
+
+  <!-- Options page -->
+  <String Id="OptionsHeader" Value="Setup Options" />
+  <String Id="OptionsLocationLabel" Value="Install location:" />
+  <String Id="OptionsPerUserScopeText" Value="Install StonkAgents just for &amp;me" />
+  <String Id="OptionsPerMachineScopeText" Value="Install StonkAgents for all &amp;users" />
+  <String Id="OptionsBrowseButton" Value="&amp;Browse" />
+  <String Id="OptionsOkButton" Value="&amp;OK" />
+  <String Id="OptionsCancelButton" Value="&amp;Cancel" />
+
+  <!--
+    Progress page. Node.js (when missing) and the StonkAgents MSI take 1 to 2
+    minutes; the command tools no longer run inside the MSI. The per-step label
+    is each package's DisplayName attribute in StonkAgentsBundle.wxs ("Step N
+    of M: ..."); the theme gives it two lines of about 90 characters and shows
+    no "Step:" label in front of it (the stock ProgressLabel string is unused).
+    The live detail under the progress bar (ExecuteProgressActionDataText) is
+    filled by the MSI's ActionStart messages ("Copying new files") and has no
+    string here.
+  -->
+  <String Id="ProgressHeader" Value="Installing your agent" />
+  <String Id="OverallProgressPackageText" Value="Preparing StonkAgents, 1 to 2 minutes. Keep this window open." />
+  <String Id="ProgressCancelButton" Value="&amp;Cancel" />
+
+  <!-- Modify (uninstall / repair) page -->
+  <String Id="ModifyHeader" Value="Modify [WixBundleName]" />
+  <String Id="ModifyRepairButton" Value="&amp;Repair" />
+  <String Id="ModifyUninstallButton" Value="&amp;Uninstall" />
+  <String Id="ModifyCancelButton" Value="&amp;Cancel" />
+
+  <!-- Success page (the finish screen the user sees after install) -->
+  <String Id="SuccessHeader" Value="[WixBundleName] is ready" />
+  <String Id="SuccessCacheHeader" Value="[WixBundleName] is ready" />
+  <String Id="SuccessInstallHeader" Value="[WixBundleName] is ready" />
+  <String Id="SuccessLayoutHeader" Value="[WixBundleName] is ready" />
+  <String Id="SuccessModifyHeader" Value="[WixBundleName] modified successfully" />
+  <String Id="SuccessRepairHeader" Value="[WixBundleName] repaired successfully" />
+  <String Id="SuccessUninstallHeader" Value="[WixBundleName] uninstalled" />
+  <String Id="SuccessUnsafeUninstallHeader" Value="[WixBundleName] uninstalled" />
+  <String Id="SuccessLaunchButton" Value="&amp;Open portal" />
+  <!-- The command tools (the stonkagents CLI and the OpenClaw gateway) are being installed by the
+       background task the MSI started; the portal's "Command tools" chip shows its progress. -->
+  <String Id="SuccessRestartText" Value="Your agent is live on this machine.&#xA;&#xA;The command tools (OpenClaw CLI and gateway) are being set up in the background; the portal shows their progress.&#xA;&#xA;Next in the StonkAgents portal:&#xA;  - Launch your agent token&#xA;  - Discover other agents&#xA;  - Share files P2P" />
+  <String Id="SuccessUninstallRestartText" Value="You must restart your computer to complete the removal." />
+  <String Id="SuccessRestartButton" Value="&amp;Restart" />
+  <String Id="SuccessCloseButton" Value="&amp;Close" />
+
+  <!-- Failure page -->
+  <String Id="FailureHeader" Value="Setup didn't complete" />
+  <String Id="FailureCacheHeader" Value="Setup didn't complete" />
+  <String Id="FailureInstallHeader" Value="Setup didn't complete" />
+  <String Id="FailureLayoutHeader" Value="Setup didn't complete" />
+  <String Id="FailureModifyHeader" Value="Modify failed" />
+  <String Id="FailureRepairHeader" Value="Repair failed" />
+  <String Id="FailureUninstallHeader" Value="Uninstall failed" />
+  <String Id="FailureUnsafeUninstallHeader" Value="Uninstall failed" />
+  <String Id="FailureHyperlinkLogText" Value="One or more issues caused the setup to fail. View the &lt;a href=&quot;#&quot;&gt;log file&lt;/a&gt; for details." />
+  <String Id="FailureRestartText" Value="You must restart your computer to complete the rollback." />
+  <String Id="FailureRestartButton" Value="&amp;Restart" />
+  <String Id="FailureCloseButton" Value="&amp;Close" />
+
+  <!-- Files-in-use page -->
+  <String Id="FilesInUseTitle" Value="Files In Use" />
+  <String Id="FilesInUseLabel" Value="The following applications are using files that need to be updated:" />
+  <String Id="FilesInUseNetfxCloseRadioButton" Value="Close the &amp;applications." />
+  <String Id="FilesInUseCloseRadioButton" Value="Close the &amp;applications and attempt to restart them." />
+  <String Id="FilesInUseDontCloseRadioButton" Value="&amp;Do not close applications. A reboot will be required." />
+  <String Id="FilesInUseRetryButton" Value="&amp;Retry" />
+  <String Id="FilesInUseIgnoreButton" Value="&amp;Ignore" />
+  <String Id="FilesInUseExitButton" Value="E&amp;xit" />
+</WixLocalization>

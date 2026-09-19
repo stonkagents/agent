@@ -1,0 +1,11 @@
+{
+  "method": "POST",
+  "path": "/api/v1/feedback",
+  "requestHeaders": {
+    "X-Turnstile-Token": "<widget response>"
+  },
+  "status": 200,
+  "response": {
+    "ok": true
+  }
+}

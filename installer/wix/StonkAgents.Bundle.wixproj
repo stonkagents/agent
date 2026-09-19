@@ -1,0 +1,28 @@
+<Project Sdk="WixToolset.Sdk/6.0.2">
+  <PropertyGroup Label="Globals">
+    <OutputType>Bundle</OutputType>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <Version Condition="'$(Version)' == ''">0.1.0</Version>
+    <!-- Environment (dev, stg, prd) selects names, folders, ports and UpgradeCodes; see Environment.wxi. -->
+    <Environment Condition="'$(Environment)' == ''">prd</Environment>
+    <!-- PortalUrl: the finish-screen "Open the StonkAgents portal" target. Production by default;
+         build-msi.ps1 passes -p:PortalUrl=https://dev.stonkagents.com for dev builds. -->
+    <PortalUrl Condition="'$(PortalUrl)' == ''">https://stonkagents.com</PortalUrl>
+    <!-- Preprocessor variables: set by build script via -p:StonkAgentsMsiPath=... -p:NodeMsiPath=... -p:PortalUrl=... (the setup tools ship inside the MSI) -->
+    <DefineConstants>$(DefineConstants);Version=$(Version);Environment=$(Environment);PortalUrl=$(PortalUrl);StonkAgentsMsiPath=$(StonkAgentsMsiPath);NodeMsiPath=$(NodeMsiPath)</DefineConstants>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="StonkAgentsBundle.wxs" />
+    <!--
+      StonkAgentsBundle.en-us.wxl is referenced via LocalizationFile= on the
+      WixStandardBootstrapperApplication element and ends up embedded by the
+      BAL extension. Do NOT also list it as EmbeddedResource here — that
+      causes WIX0100 "identifier duplicated in multiple locations" errors.
+    -->
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="WixToolset.BootstrapperApplications.wixext" Version="6.0.2" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="6.0.2" />
+  </ItemGroup>
+</Project>

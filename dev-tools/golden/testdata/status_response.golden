@@ -1,0 +1,21 @@
+# GET /api/v1/status
+# Status: OK (200)
+# Content-Type: application/json
+
+{
+  "daemon": {
+    "peer_id": "12D3KooMVP",
+    "uptime_seconds": 0,
+    "version": "0.1.0"
+  },
+  "downloads": {
+    "active": 0,
+    "completed": 0,
+    "queued": 0
+  },
+  "network": {
+    "connected": false,
+    "peers": 0
+  },
+  "shared_assets": 0
+}

@@ -1,0 +1,69 @@
+{
+  "method": "GET",
+  "path": "/api/launch/config",
+  "status": 200,
+  "response": {
+    "data": {
+      "cluster": "mainnet",
+      "programId": "LanMV9sAd7wArD4vJFi2qDdfnVhFxYSUg6eADduJ3uj",
+      "platformId": "PLATFORMtest1111111111111111111111111111111",
+      "treasury": "TREASURYtest1111111111111111111111111111111",
+      "transferFeeBps": 100,
+      "fee": {
+        "usd": 0.5,
+        "lamports": 4901961,
+        "solUsd": 102,
+        "pricedAt": "2026-09-11T12:00:00Z",
+        "stale": false
+      },
+      "defaultQuoteMint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+      "quotes": [
+        {
+          "cluster": "mainnet",
+          "quoteMint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+          "symbol": "STONK",
+          "name": "STONK",
+          "decimals": 9,
+          "tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "category": "custom",
+          "launchlabConfigId": "4Rb2joMnuDt9zRPuTYxUjQRGQ8oNBbKdXnCJSCojvBsW",
+          "minFundRaisingRaw": "1",
+          "enabled": true,
+          "sortOrder": 0
+        }
+      ],
+      "quote": {
+        "cluster": "mainnet",
+        "quoteMint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+        "symbol": "STONK",
+        "name": "STONK",
+        "decimals": 9,
+        "tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "category": "custom",
+        "launchlabConfigId": "4Rb2joMnuDt9zRPuTYxUjQRGQ8oNBbKdXnCJSCojvBsW",
+        "minFundRaisingRaw": "1",
+        "enabled": true,
+        "sortOrder": 0
+      },
+      "raise": {
+        "raw": "29389830508475",
+        "units": 29389.830508475,
+        "minimumRaw": "1",
+        "basis": "Sized so this launch is worth the same as the default 85 SOL raise"
+      },
+      "curve": {
+        "configId": "4Rb2joMnuDt9zRPuTYxUjQRGQ8oNBbKdXnCJSCojvBsW",
+        "curveType": "ConstantCurve",
+        "migrateType": "cpmm",
+        "baseDecimals": 6,
+        "supply": "1000000000000000",
+        "totalSellA": "793100000000000",
+        "totalLockedAmount": "0",
+        "cliffPeriod": "0",
+        "unlockPeriod": "0",
+        "cpmmCreatorFeeOn": 0
+      },
+      "devDripEnabled": true
+    }
+  }
+}

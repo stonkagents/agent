@@ -1,0 +1,161 @@
+// Feature: F-010 (P2P Transfer Protocol)
+// Story: US-010-05 (Bitswap-like Block Exchange Protocol)
+// Purpose: Protocol Buffer wire format for chunk-based file transfers
+// Inspired by: IPFS Bitswap protocol, simplified for StonkAgents
+
+syntax = "proto3";
+
+package AgentNet.protocol.v1;
+
+option go_package = "github.com/stonkagents/agent/api/proto/v1;protov1";
+
+// Message is the top-level envelope for all block exchange messages.
+// Uses a oneof to support multiple message types over a single stream.
+message Message {
+  oneof payload {
+    BlockRequest block_request = 1;
+    BlockResponse block_response = 2;
+    BlockNotFound block_not_found = 3;
+    BlockPresence block_presence = 4;
+    WantList want_list = 5;
+  }
+}
+
+// BlockRequest requests a specific chunk from a peer.
+// Sent by downloaders to seeders.
+message BlockRequest {
+  // file_cid is the content identifier of the complete file
+  string file_cid = 1;
+
+  // chunk_index is the 0-based position of the requested chunk
+  int32 chunk_index = 2;
+
+  // request_id is a unique identifier for this request (for tracking/debugging)
+  string request_id = 3;
+
+  // priority indicates request urgency (0=low, 100=high)
+  // Used for prioritizing chunk delivery in upload queues
+  int32 priority = 4;
+}
+
+// BlockResponse delivers a requested chunk.
+// Sent by seeders to downloaders.
+message BlockResponse {
+  // file_cid is the content identifier of the complete file
+  string file_cid = 1;
+
+  // chunk_index is the 0-based position of this chunk
+  int32 chunk_index = 2;
+
+  // chunk_cid is the content identifier of this specific chunk
+  // Receiver must verify this matches the actual data
+  string chunk_cid = 3;
+
+  // data is the raw chunk bytes (max 256KB = 262,144 bytes)
+  bytes data = 4;
+
+  // request_id matches the original BlockRequest for tracking
+  string request_id = 5;
+}
+
+// BlockNotFound indicates the requested chunk is not available.
+// Sent by seeders when they don't have the requested chunk.
+message BlockNotFound {
+  // file_cid is the content identifier of the requested file
+  string file_cid = 1;
+
+  // chunk_index is the missing chunk position
+  int32 chunk_index = 2;
+
+  // request_id matches the original BlockRequest
+  string request_id = 3;
+
+  // reason explains why the block is unavailable (optional)
+  string reason = 4;
+}
+
+// BlockPresence advertises which chunks a peer has available.
+// Sent proactively or in response to WantList queries.
+// Helps downloaders make smart decisions about peer selection.
+message BlockPresence {
+  // file_cid is the content identifier of the file
+  string file_cid = 1;
+
+  // available_chunks is a bitmap of chunk indices this peer has
+  // For efficiency, uses run-length encoding: [start, length, start, length, ...]
+  // Example: [0, 10, 20, 5] means chunks 0-9 and 20-24 are available
+  repeated int32 available_chunks = 2;
+
+  // total_chunks is the total number of chunks for this file
+  int32 total_chunks = 3;
+
+  // is_complete indicates if this peer has all chunks (seeder)
+  bool is_complete = 4;
+}
+
+// WantList declares what chunks a peer wants.
+// Sent by downloaders to seeders to express interest.
+// Allows seeders to proactively push chunks or prioritize requests.
+message WantList {
+  // file_cid is the content identifier of the desired file
+  string file_cid = 1;
+
+  // wanted_chunks is a list of chunk indices the peer wants
+  repeated int32 wanted_chunks = 2;
+
+  // priority indicates overall interest level (0=low, 100=high)
+  int32 priority = 3;
+}
+
+// FileMetadata describes a complete file's chunking structure.
+// Exchanged during initial handshake to agree on chunk layout.
+message FileMetadata {
+  // file_cid is the Merkle root of all chunk CIDs
+  string file_cid = 1;
+
+  // filename is the original filename
+  string filename = 2;
+
+  // total_size is the complete file size in bytes
+  int64 total_size = 3;
+
+  // total_chunks is the number of 256KB chunks
+  int32 total_chunks = 4;
+
+  // chunk_size is typically 262144 (256KB)
+  int32 chunk_size = 5;
+
+  // chunk_cids is the ordered list of chunk content identifiers
+  // Used to verify file integrity
+  repeated string chunk_cids = 6;
+
+  // manifest_type is the asset type (e.g., "raw", "vector", "model")
+  string manifest_type = 7;
+
+  // manifest_data is the serialized manifest (protobuf bytes)
+  // Contains asset-specific metadata (AtRawManifest or AtVecManifest)
+  // Preserved through P2P transfer for asset type reconstruction
+  bytes manifest_data = 8;
+}
+
+// TransferStats tracks bandwidth and performance metrics.
+// Sent periodically for monitoring and reputation scoring.
+message TransferStats {
+  // peer_id identifies the remote peer
+  string peer_id = 1;
+
+  // bytes_sent is the total bytes uploaded to this peer
+  int64 bytes_sent = 2;
+
+  // bytes_received is the total bytes downloaded from this peer
+  int64 bytes_received = 3;
+
+  // blocks_sent is the number of chunks uploaded
+  int32 blocks_sent = 4;
+
+  // blocks_received is the number of chunks downloaded
+  int32 blocks_received = 5;
+
+  // duration_ms is the connection duration in milliseconds
+  int64 duration_ms = 6;
+}

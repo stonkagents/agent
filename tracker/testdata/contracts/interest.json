@@ -1,0 +1,12 @@
+{
+  "method": "POST",
+  "path": "/api/v1/interest",
+  "status": 200,
+  "response": {
+    "ok": true,
+    "counts": {
+      "alerts": 1,
+      "trade": 1
+    }
+  }
+}

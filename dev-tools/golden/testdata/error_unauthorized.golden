@@ -1,0 +1,10 @@
+# GET /api/v1/status
+# Status: Unauthorized (401)
+# Content-Type: application/json
+
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Missing authorization token"
+  }
+}

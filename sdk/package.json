@@ -1,0 +1,51 @@
+{
+  "name": "@stonkagents/sdk",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for StonkAgents P2P file sharing",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc && tsc --module esnext --outDir dist/esm && node scripts/build-dual.js",
+    "build:watch": "tsc --watch",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "test": "jest --bail",
+    "test:ci": "jest --coverage",
+    "test:watch": "jest --watch",
+    "prettier:check": "prettier --check 'src/**/*.ts'",
+    "prettier:write": "prettier --write 'src/**/*.ts'"
+  },
+  "keywords": [
+    "stonkagents",
+    "p2p",
+    "file-sharing",
+    "ai-agents",
+    "decentralized"
+  ],
+  "author": "StonkAgents Contributors",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "jest": "^29.5.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,9 @@
+# POST /api/v1/download
+# Status: Accepted (202)
+# Content-Type: application/json
+
+{
+  "cid": "bafkreigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+  "message": "Download queued successfully",
+  "status": "queued"
+}

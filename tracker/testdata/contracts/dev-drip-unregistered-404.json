@@ -1,0 +1,14 @@
+{
+  "method": "POST",
+  "path": "/api/dev/drip",
+  "requestBody": {
+    "wallet": "9hSR6S7WPtxmTojgo6GG3k4yDPecgJY292j7xrsUGWBu"
+  },
+  "status": 404,
+  "response": {
+    "error": {
+      "code": "NOT_FOUND",
+      "message": "Route not found"
+    }
+  }
+}

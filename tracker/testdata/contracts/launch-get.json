@@ -1,0 +1,59 @@
+{
+  "method": "GET",
+  "path": "/api/launch/32akzZ4eJcC1kGphx6pENrhT2JjejYENkuyvmnGSAP3S",
+  "status": 200,
+  "response": {
+    "data": {
+      "mint": "32akzZ4eJcC1kGphx6pENrhT2JjejYENkuyvmnGSAP3S",
+      "pool_id": "36W48rXetuVEtN5DPQ99fjUDGTwrQbvCKKeaqAK2uiN9",
+      "creator_wallet": "3ARMH9zfVCnU2TKiphU4xcEyWdA45fc1sjKEtYMdf3gr",
+      "quote_mint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+      "name": "Stonk Agent",
+      "symbol": "STNK",
+      "image_url": "https://cdn.example/a.png",
+      "image_thumb_url": "https://cdn.example/a-thumb.png",
+      "metadata_uri": "ipfs://QmMeta",
+      "launch_signature": "hjy3dibqA8TuNuMhest7KZaAWVprfjf8CKyBnsiqJ8rbruXvX9m5jhgpnC8S1zZ85njKPvnehbh5swScu84UGSF",
+      "fee_lamports": 20000000,
+      "transfer_fee_bps": 100,
+      "platform_id": "PLATFORMtest1111111111111111111111111111111",
+      "status": "confirmed",
+      "created_at": "2026-09-11T12:00:00Z",
+      "poolId": "36W48rXetuVEtN5DPQ99fjUDGTwrQbvCKKeaqAK2uiN9",
+      "creatorWallet": "3ARMH9zfVCnU2TKiphU4xcEyWdA45fc1sjKEtYMdf3gr",
+      "quoteMint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+      "imageUrl": "https://cdn.example/a.png",
+      "imageThumbUrl": "https://cdn.example/a-thumb.png",
+      "metadataUri": "ipfs://QmMeta",
+      "launchSignature": "hjy3dibqA8TuNuMhest7KZaAWVprfjf8CKyBnsiqJ8rbruXvX9m5jhgpnC8S1zZ85njKPvnehbh5swScu84UGSF",
+      "feeLamports": 20000000,
+      "transferFeeBps": 100,
+      "platformId": "PLATFORMtest1111111111111111111111111111111",
+      "createdAt": "2026-09-11T12:00:00Z",
+      "agentBound": false,
+      "quote": {
+        "mint": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx",
+        "symbol": "STONK",
+        "name": "STONK",
+        "category": "custom",
+        "decimals": 9,
+        "tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      },
+      "metrics": {
+        "marketCapUsd": 9000.5,
+        "curveProgressPct": 48,
+        "holders": 12,
+        "priceUsd": 0.0012,
+        "quoteRaised": 14100.5,
+        "quoteTarget": 29389.83,
+        "graduated": false,
+        "source": "launchlab",
+        "priceQuote": 0.004,
+        "priceChange24hPct": 300,
+        "volume24hQuote": 4,
+        "volume24hUsd": 1.2,
+        "trades24h": 2
+      }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+ALTER TABLE forum_posts DROP COLUMN IF EXISTS auto;

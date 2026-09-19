@@ -1,0 +1,194 @@
+<?ifndef Version?><?define Version = "0.1.0"?><?endif?>
+<?include Environment.wxi?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package Name="$(var.ProductName)" Language="1033" Version="$(var.Version)" Manufacturer="StonkAgents" UpgradeCode="$(var.MsiUpgradeCode)" Scope="perMachine">
+    <SummaryInformation Description="$(var.ProductName): P2P knowledge sync for AI agents" Manufacturer="StonkAgents" />
+    <Media Id="1" Cabinet="StonkAgents.cab" EmbedCab="yes" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.ProductName) is already installed." />
+
+    <!-- Branded bitmaps: from stonkagents-windows-assets/wix-bitmaps/ (see stonkagents-windows-assets/README.txt). If missing, add them or build will fail. -->
+    <WixVariable Id="WixUIBannerBmp" Value="..\..\stonkagents-windows-assets\wix-bitmaps\wix-banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="..\..\stonkagents-windows-assets\wix-bitmaps\wix-dialog.bmp" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+
+    <!-- Add/Remove Programs branding. -->
+    <Icon Id="AppIcon" SourceFile="..\..\stonkagents-windows-assets\icons\StonkAgents.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+    <!-- Public hostname: stonkagents.com (stonkagents.com stays live for installed clients). -->
+    <Property Id="ARPURLINFOABOUT" Value="https://stonkagents.com" />
+    <Property Id="ARPCOMMENTS" Value="$(var.ProductName): P2P knowledge sync for AI agents" />
+
+    <Feature Id="ProductFeature" Title="$(var.ProductName)" Description="$(var.ProductName) daemon, services, and portal access" Level="1">
+      <ComponentGroupRef Id="InstallFiles" />
+      <ComponentRef Id="StartMenuShortcut" />
+      <ComponentRef Id="CommandToolsShortcut" />
+    </Feature>
+
+    <!--
+      Run setuphelper.exe after files are copied (deferred so files exist). Quoted so paths
+      with spaces work. Return="ignore" so a setuphelper failure does not roll back the file
+      copy. Besides config, secrets and the services, setuphelper registers and starts the
+      scheduled task "$(var.CommandToolsTask)" (installer/helper/commandtools.go,
+      internal/commandtools), which runs stonkagents-tools.exe in the background as the
+      installing user once this installer is done: npm install -g stonkagents, onboarding
+      and the gateway task, 5 to 15 minutes on a slow disk, no longer inside the MSI. The
+      fourth field, LogonUser, is the account that launched the install; setuphelper
+      prefers the console session's user (resolved from its token, which the LocalSystem
+      custom action may read) and falls back to this. The job writes
+      [DATADIR]command-tools.json; the controller serves it to the portal, which shows the
+      progress and offers a retry.
+    -->
+    <SetProperty Id="CA_RunSetupHelper" Value="&quot;[INSTALLDIR]setuphelper.exe&quot; &quot;[INSTALLDIR];[SECRETSDIR];[DATADIR];[LogonUser]&quot;" Before="CA_RunSetupHelper" Sequence="execute" />
+    <CustomAction Id="CA_RunSetupHelper" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" BinaryRef="Wix4UtilCA_X64" />
+
+    <!--
+      Rollback of CA_RunSetupHelper (Cancel after the files were copied): end the background
+      job and drop its task, so nothing keeps running against a rolled-back install. The
+      services setuphelper created are removed by the next install or uninstall, as before.
+      Scheduled before CA_RunSetupHelper (Windows Installer runs rollback actions in
+      reverse order of the point they were reached).
+    -->
+    <SetProperty Id="CA_RollbackEndCommandToolsTask" Value="&quot;[System64Folder]schtasks.exe&quot; /End /TN &quot;$(var.CommandToolsTask)&quot;" Before="CA_RollbackEndCommandToolsTask" Sequence="execute" Condition="NOT Installed" />
+    <CustomAction Id="CA_RollbackEndCommandToolsTask" DllEntry="WixQuietExec" Execute="rollback" Impersonate="no" Return="ignore" BinaryRef="Wix4UtilCA_X64" />
+    <SetProperty Id="CA_RollbackDeleteCommandToolsTask" Value="&quot;[System64Folder]schtasks.exe&quot; /Delete /F /TN &quot;$(var.CommandToolsTask)&quot;" Before="CA_RollbackDeleteCommandToolsTask" Sequence="execute" Condition="NOT Installed" />
+    <CustomAction Id="CA_RollbackDeleteCommandToolsTask" DllEntry="WixQuietExec" Execute="rollback" Impersonate="no" Return="ignore" BinaryRef="Wix4UtilCA_X64" />
+
+    <!--
+      Error table row 8 is the template Windows Installer formats every ActionStart
+      message with before an external UI such as Burn shows it: "Action [Time]: [1]. [2]".
+      Only the description ("Copying new files") is shown under the setup window's
+      progress bar, without the action name and the time stamp.
+    -->
+    <UI>
+      <Error Id="8" Message="[2]" />
+    </UI>
+
+    <!-- Uninstall: end the background command tools job if it is still running and delete its task (schtasks needs the exe path quoted for WixQuietExec). Return="ignore": a missing task is fine. -->
+    <SetProperty Id="CA_EndCommandToolsTask" Value="&quot;[System64Folder]schtasks.exe&quot; /End /TN &quot;$(var.CommandToolsTask)&quot;" Before="CA_EndCommandToolsTask" Sequence="execute" Condition="REMOVE=&quot;ALL&quot;" />
+    <CustomAction Id="CA_EndCommandToolsTask" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" BinaryRef="Wix4UtilCA_X64" />
+    <SetProperty Id="CA_DeleteCommandToolsTask" Value="&quot;[System64Folder]schtasks.exe&quot; /Delete /F /TN &quot;$(var.CommandToolsTask)&quot;" Before="CA_DeleteCommandToolsTask" Sequence="execute" Condition="REMOVE=&quot;ALL&quot;" />
+    <CustomAction Id="CA_DeleteCommandToolsTask" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" BinaryRef="Wix4UtilCA_X64" />
+
+    <!-- Uninstall: stop services first, then delete (must stop before delete; deferred so elevated) -->
+    <SetProperty Id="CA_StopDaemonService" Value="&quot;[System64Folder]sc.exe&quot; stop $(var.DaemonService)" Before="CA_StopDaemonService" Sequence="execute" Condition="REMOVE=&quot;ALL&quot;" />
+    <CustomAction Id="CA_StopDaemonService" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" BinaryRef="Wix4UtilCA_X64" />
+    <SetProperty Id="CA_StopControllerService" Value="&quot;[System64Folder]sc.exe&quot; stop $(var.ControllerService)" Before="CA_StopControllerService" Sequence="execute" Condition="REMOVE=&quot;ALL&quot;" />
+    <CustomAction Id="CA_StopControllerService" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" BinaryRef="Wix4UtilCA_X64" />
+    <SetProperty Id="CA_UninstallDaemonService" Value="&quot;[System64Folder]sc.exe&quot; delete $(var.DaemonService)" Before="CA_UninstallDaemonService" Sequence="execute" Condition="REMOVE=&quot;ALL&quot;" />
+    <CustomAction Id="CA_UninstallDaemonService" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" BinaryRef="Wix4UtilCA_X64" />
+    <SetProperty Id="CA_UninstallControllerService" Value="&quot;[System64Folder]sc.exe&quot; delete $(var.ControllerService)" Before="CA_UninstallControllerService" Sequence="execute" Condition="REMOVE=&quot;ALL&quot;" />
+    <CustomAction Id="CA_UninstallControllerService" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" BinaryRef="Wix4UtilCA_X64" />
+    <!-- Uninstall: drop the "StonkAgents Agent" inbound firewall rule setuphelper.exe / the controller added (name must match internal/setup FirewallRuleName). Return="ignore": a missing rule is fine. -->
+    <SetProperty Id="CA_RemoveFirewallRule" Value="&quot;[System64Folder]netsh.exe&quot; advfirewall firewall delete rule name=&quot;$(var.FirewallRule)&quot;" Before="CA_RemoveFirewallRule" Sequence="execute" Condition="REMOVE=&quot;ALL&quot;" />
+    <CustomAction Id="CA_RemoveFirewallRule" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" BinaryRef="Wix4UtilCA_X64" />
+
+
+    <InstallExecuteSequence>
+      <!-- The rollback pair goes on the rollback stack before setuphelper runs (declaration order = execution order). -->
+      <Custom Action="CA_RollbackDeleteCommandToolsTask" After="InstallFiles" Condition="NOT Installed" />
+      <Custom Action="CA_RollbackEndCommandToolsTask" After="CA_RollbackDeleteCommandToolsTask" Condition="NOT Installed" />
+      <!-- Files in place: setuphelper writes config, creates and starts the services, then
+           registers and starts the background command tools task. Nothing else runs after it;
+           the MSI is done in about a minute. -->
+      <Custom Action="CA_RunSetupHelper" After="CA_RollbackEndCommandToolsTask" Condition="NOT Installed" />
+      <Custom Action="CA_EndCommandToolsTask" Before="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom Action="CA_DeleteCommandToolsTask" Before="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom Action="CA_StopControllerService" Before="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom Action="CA_StopDaemonService" Before="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom Action="CA_UninstallControllerService" Before="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom Action="CA_UninstallDaemonService" Before="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
+      <Custom Action="CA_RemoveFirewallRule" Before="RemoveFiles" Condition="REMOVE=&quot;ALL&quot;" />
+    </InstallExecuteSequence>
+
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLDIR" />
+
+      <StandardDirectory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLDIR" Name="$(var.InstallDirName)" />
+      </StandardDirectory>
+      <StandardDirectory Id="ProgramMenuFolder">
+        <Directory Id="StartMenuDir" Name="$(var.ProductName)" />
+      </StandardDirectory>
+      <StandardDirectory Id="PersonalFolder">
+        <Directory Id="SECRETSDIR" Name="$(var.DataDirName)">
+          <Directory Id="DATADIR" Name="data" />
+        </Directory>
+      </StandardDirectory>
+    </Package>
+  <Fragment>
+    <ComponentGroup Id="InstallFiles">
+      <ComponentRef Id="DaemonExe" />
+      <ComponentRef Id="SvcWrapExe" />
+      <ComponentRef Id="ControllerSvcExe" />
+      <ComponentRef Id="LauncherScript" />
+      <ComponentRef Id="GenkeysExe" />
+      <ComponentRef Id="SetupHelperExe" />
+      <ComponentRef Id="PostInstallScript" />
+      <ComponentRef Id="CommandToolsExe" />
+      <ComponentRef Id="GatewaySetupExe" />
+      <ComponentRef Id="EnvPath" />
+      <ComponentRef Id="CliWrapper" />
+    </ComponentGroup>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="StartMenuDir">
+      <Component Id="StartMenuShortcut" Guid="$(var.GuidStartMenuShortcut)">
+        <Shortcut Id="StartMenuShortcut" Name="$(var.ProductName)" Description="$(var.ProductName): P2P knowledge sync for AI agents" Target="[INSTALLDIR]$(var.CliWrapperName)" Directory="StartMenuDir" />
+        <RegistryValue Root="HKCU" Key="$(var.RegistryKey)" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+      <Component Id="CommandToolsShortcut" Guid="$(var.GuidCommandToolsShortcut)">
+        <Shortcut Id="CommandToolsShortcut" Name="Configure $(var.ProductName) AI" Description="Onboard $(var.ProductName) with your StonkAgents AI key (included credits)" Target="[System64Folder]WindowsPowerShell\v1.0\powershell.exe" Arguments="-ExecutionPolicy Bypass -File &quot;[INSTALLDIR]post-install.ps1&quot;" Directory="StartMenuDir" />
+        <RegistryValue Root="HKCU" Key="$(var.ShortcutRegistryKey)" Name="ConfigureAIShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="DaemonExe" Guid="$(var.GuidDaemonExe)">
+        <File Id="DaemonExe" Source="$(var.BuildDir)\stonkagents-daemon.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="SvcWrapExe" Guid="$(var.GuidSvcWrapExe)">
+        <File Id="SvcWrapExe" Source="$(var.BuildDir)\stonkagents-svc.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="ControllerSvcExe" Guid="$(var.GuidControllerSvcExe)">
+        <File Id="ControllerSvcExe" Source="$(var.BuildDir)\stonkagents-controller-svc.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="LauncherScript" Guid="$(var.GuidLauncherScript)">
+        <File Id="LauncherScript" Source="$(var.BuildDir)\start-daemon.ps1" KeyPath="yes" />
+      </Component>
+      <Component Id="GenkeysExe" Guid="$(var.GuidGenkeysExe)">
+        <File Id="GenkeysExe" Source="$(var.BuildDir)\genkeys.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="SetupHelperExe" Guid="$(var.GuidSetupHelperExe)">
+        <File Id="SetupHelperExe" Source="$(var.BuildDir)\setuphelper.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="PostInstallScript" Guid="$(var.GuidPostInstallScript)">
+        <File Id="PostInstallScript" Source="$(var.BuildDir)\post-install.ps1" KeyPath="yes" />
+      </Component>
+      <!-- The two setup tools the background command tools task runs (setuphelper registers it; they used to be MSI custom actions, and before that Burn ExePackages). -->
+      <Component Id="CommandToolsExe" Guid="$(var.GuidCommandToolsExe)">
+        <File Id="CommandToolsExe" Source="$(var.BuildDir)\stonkagents-tools.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="GatewaySetupExe" Guid="$(var.GuidGatewaySetupExe)">
+        <File Id="GatewaySetupExe" Source="$(var.BuildDir)\gateway-setup.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="EnvPath" Guid="$(var.GuidEnvPath)">
+        <Environment Id="Env_StonkAgentsPath"
+                     Name="PATH"
+                     Value="[INSTALLDIR]"
+                     Part="first"
+                     System="yes"
+                     Action="set" />
+        <RegistryValue Root="HKLM"
+                       Key="$(var.RegistryKey)"
+                       Name="PathAdded"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+      <Component Id="CliWrapper" Guid="$(var.GuidCliWrapper)">
+        <File Id="CliWrapperFile" Source="$(var.BuildDir)\$(var.CliWrapperName)" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+</Wix>

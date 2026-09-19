@@ -1,0 +1,24 @@
+<Project Sdk="WixToolset.Sdk/6.0.2">
+  <PropertyGroup Label="Globals">
+    <BuildDir Condition="'$(BuildDir)' == ''">$(ProjectDir)build</BuildDir>
+    <Version Condition="'$(Version)' == ''">0.1.0</Version>
+    <!-- Environment (dev, stg, prd) selects names, folders, ports and UpgradeCodes; see Environment.wxi. -->
+    <Environment Condition="'$(Environment)' == ''">prd</Environment>
+    <DefineConstants>BuildDir=$(BuildDir);Version=$(Version);Environment=$(Environment)</DefineConstants>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <!-- Only compile v4 .wxs; StonkAgents.v3.wxs is for candle/light only -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <!-- ICE64: user-profile dirs SECRETSDIR/DATADIR are left on uninstall (user data) -->
+    <SuppressIces>ICE64</SuppressIces>
+  </PropertyGroup>
+  <ItemGroup>
+    <BindPath Include="$(BuildDir)" BindName="BuildDir" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="StonkAgents.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Util.wixext" Version="6.0.2" />
+    <PackageReference Include="WixToolset.UI.wixext" Version="6.0.2" />
+  </ItemGroup>
+</Project>

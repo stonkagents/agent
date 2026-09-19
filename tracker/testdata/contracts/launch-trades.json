@@ -1,0 +1,37 @@
+{
+  "method": "GET",
+  "path": "/api/launch/32akzZ4eJcC1kGphx6pENrhT2JjejYENkuyvmnGSAP3S/trades?limit=50",
+  "status": 200,
+  "response": {
+    "data": [
+      {
+        "signature": "23YMMgSEmKvN1XnTTqs7uSpetpPnoufgWyrFXhztkjpvHDCDcd8Sym2QKf8bcX3cy75ZeT8ZDwBk3XQnFQiyoZBx",
+        "blockTime": "2026-09-11T11:00:00Z",
+        "side": "sell",
+        "trader": "3JFwZkvgfoNvJdpjhJ7uYMnVzwaTRnyezYeZ1JSq9iLG",
+        "baseAmount": 500,
+        "quoteAmount": 2,
+        "priceQuote": 0.004
+      },
+      {
+        "signature": "22NJRvPZSAcyy8ogRGfsdzJ2U6v9W77kfpSPeokxM2mGJxvyVWXKDUNqkbLLgbJTKebg54rHywMsF2KWaYqxtCg3",
+        "blockTime": "2026-09-11T09:00:00Z",
+        "side": "buy",
+        "trader": "3JFwZkvgfoNvJdpjhJ7uYMnVzwaTRnyezYeZ1JSq9iLG",
+        "baseAmount": 1000,
+        "quoteAmount": 2,
+        "priceQuote": 0.002
+      },
+      {
+        "signature": "21DJhHJYn9vmGhj6WLPYwFmz4uYaHzPgXjrPVwkRjHHFHt7hYMptpQJqej1ESeuJ7aW5jGCrSXqrNbGQwdxVmB8G",
+        "blockTime": "2026-09-10T06:00:00Z",
+        "side": "buy",
+        "trader": "3ARMH9zfVCnU2TKiphU4xcEyWdA45fc1sjKEtYMdf3gr",
+        "baseAmount": 1000,
+        "quoteAmount": 1,
+        "priceQuote": 0.001
+      }
+    ],
+    "next_cursor": ""
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "method": "POST",
+  "path": "/api/dev/drip",
+  "status": 200,
+  "response": {
+    "signature": "2QVive7pjcVZSML3X3xSE5EfNyfHx2zDzmPrvUPaCfVdWsgLxmQXeEJoUYjzvZSQrwpcU3nt9HcGtQPSZDcBiqSg",
+    "sol": 0.05,
+    "stonk": 25,
+    "explorer": "https://solscan.io/tx/2QVive7pjcVZSML3X3xSE5EfNyfHx2zDzmPrvUPaCfVdWsgLxmQXeEJoUYjzvZSQrwpcU3nt9HcGtQPSZDcBiqSg?cluster=devnet",
+    "sentSol": true,
+    "sentStonk": true
+  }
+}

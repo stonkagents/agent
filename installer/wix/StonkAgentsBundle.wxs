@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?include Environment.wxi?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+  <Bundle Name="$(var.ProductName)"
+          Version="$(var.Version)"
+          Manufacturer="StonkAgents"
+          UpgradeCode="$(var.BundleUpgradeCode)"
+          IconSourceFile="..\..\stonkagents-windows-assets\icons\StonkAgents.ico">
+    <BootstrapperApplication>
+      <!--
+        Branded StonkAgents Burn UI:
+        - LogoFile: StonkAgents icon shown top-left of the bundle window
+        - LogoSideFile: StonkAgents sidebar panel (dark bg, orange mark, green
+          wordmark), 165x400 to match the theme's ImageControl
+        - IconSourceFile (on Bundle): the StonkAgents .ico becomes the setup
+          exe's icon and the setup window's title bar icon (without it Burn
+          shows the generic application icon)
+        - Theme="hyperlinkSidebarLicense": sidebar layout with logo + side panel
+        - LocalizationFile: our .wxl overrides the stock HyperlinkTheme.wxl
+          strings (welcome / success / buttons) with StonkAgents-themed copy.
+          Installer is English-only; this file exists purely to override
+          the default strings, not to localize anything.
+
+        IMPORTANT: LocalizationFile must be resolvable by the binder at
+        build time. A bare filename resolves relative to MSBuild's cwd,
+        not the .wxs file, and silently falls back to the default
+        HyperlinkTheme.wxl (you'll see raw `#(loc.X)` in the UI). Prefix
+        with $(var.ProjectDir) so it resolves next to this .wxs.
+        Refs: src/ext/Bal/wixlib/wixstdba.wxs:73 (Payload thm.wxl) and
+        src/ext/Bal/wixext/BalCompiler.cs:846 (WixStdbaThemeWxl var).
+      -->
+      <bal:WixStandardBootstrapperApplication
+          LicenseUrl="https://stonkagents.com"
+          Theme="hyperlinkSidebarLicense"
+          LogoFile="..\..\stonkagents-windows-assets\icons\stonkagents-64x64.png"
+          LogoSideFile="..\..\stonkagents-windows-assets\wix-bitmaps\wix-sidebar.png"
+          LocalizationFile="$(var.ProjectDir)StonkAgentsBundle.en-us.wxl"
+          ThemeFile="$(var.ProjectDir)StonkAgentsSidebarTheme.xml" />
+      <!-- The setup window's title bar icon: the theme's Window IconFile names this payload. -->
+      <Payload SourceFile="$(var.ProjectDir)setup.ico" Name="setup.ico" />
+    </BootstrapperApplication>
+
+    <!--
+      Launch-on-success: when the user clicks "Open the StonkAgents portal" on the
+      success screen, the bundle runs `explorer.exe <PortalUrl>` which opens
+      the portal in the default browser. WiX 6 wires this up via bundle-level
+      LaunchTarget / LaunchArguments variables (the older bal:LaunchTargetPath
+      attribute was retired).
+
+      PortalUrl is a build-time preprocessor variable (StonkAgents.Bundle.wixproj
+      defaults it to https://stonkagents.com). scripts/build-msi.ps1 derives it
+      from the environment being baked into the installer, so a dev build
+      opens https://dev.stonkagents.com, a staging build
+      https://stg.stonkagents.com and a production build
+      https://stonkagents.com. Override:  dotnet build ... -p:PortalUrl=https://...
+    -->
+    <!-- The theme's strings (caption, headers) use the Burn variable [WixBundleName], which is
+         this Name, so a dev or staging setup names itself; see StonkAgentsBundle.en-us.wxl. -->
+    <Variable Name="LaunchTarget" Type="string" Value="explorer.exe" />
+    <Variable Name="LaunchArguments" Type="string" Value="$(var.PortalUrl)" />
+
+    <!-- Detect Node.js: skip Node MSI only if node.exe actually exists (not just an empty directory) -->
+    <util:FileSearch Id="NodeExeSearch"
+                     Variable="NodeExeFound"
+                     Path="[ProgramFiles64Folder]nodejs\node.exe"
+                     Result="exists" />
+
+    <Chain>
+      <!--
+        Step 1: Node.js LTS (x64 MSI). Only installs when node.exe isn't
+        already present. DisplayName is what the stock BA shows in the
+        progress label (stdbas reads sczDisplayName, falls back to the
+        package Id if unset). Mirrors the DMG's "Node.js is required for
+        StonkAgents ... 1-3 minutes" copy. Permanent="yes": Node survives
+        bundle uninstall.
+      -->
+      <MsiPackage Id="NodeJs"
+                  DisplayName="Step 1 of 2: Installing the Node.js runtime, 1 to 3 minutes"
+                  SourceFile="$(var.NodeMsiPath)"
+                  InstallCondition="NOT NodeExeFound"
+                  Vital="yes"
+                  Permanent="yes"
+                  Cache="keep" />
+
+      <RollbackBoundary />
+
+      <!--
+        Step 2: the StonkAgents MSI. It installs the daemon, controller and
+        setup helper, creates and starts the services, and registers and starts
+        the "<ProductName> command tools" scheduled task (StonkAgents.wxs,
+        CA_RunSetupHelper). That task runs npm install -g stonkagents, the
+        onboarding and the gateway task in the background, as the installing
+        user, after this window has closed (several minutes on a fresh machine:
+        about 660 packages, 600 MB; longer on a slow disk or behind an
+        antivirus). The portal shows its progress and offers a retry. So this
+        step is the file copy and the services: under a minute.
+
+        Keep the text short and free of brackets: the theme's progress label
+        (OverallProgressPackageText in StonkAgentsSidebarTheme.xml) is two
+        lines of about 90 characters each and clips anything longer.
+      -->
+      <MsiPackage Id="StonkAgents"
+                  DisplayName="Step 2 of 2: Agent service, under a minute"
+                  SourceFile="$(var.StonkAgentsMsiPath)"
+                  Vital="yes"
+                  Cache="keep" />
+    </Chain>
+  </Bundle>
+</Wix>

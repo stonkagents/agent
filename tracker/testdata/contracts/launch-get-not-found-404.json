@@ -1,0 +1,11 @@
+{
+  "method": "GET",
+  "path": "/api/launch/75iVad1FnW1c7hqA82PMqP1DfqMj9MRaHPyJGaxNzNPr",
+  "status": 404,
+  "response": {
+    "error": {
+      "code": "NOT_FOUND",
+      "message": "launch not found"
+    }
+  }
+}

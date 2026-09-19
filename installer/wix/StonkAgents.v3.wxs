@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?ifndef Version?><?define Version = "0.1.0"?><?endif?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Product Id="*"
+           Name="StonkAgents"
+           Language="1033"
+           Version="$(var.Version)"
+           Manufacturer="StonkAgents"
+           UpgradeCode="B7E8E8A1-9C2D-4E5F-8A3B-1D2C3E4F5A6B">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" />
+    <Media Id="1" Cabinet="StonkAgents.cab" EmbedCab="yes" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of StonkAgents is already installed." />
+
+    <!-- Install dir (user can change via InstallDirDlg); secrets/data under user profile. -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLDIR" Name="StonkAgents" />
+      </Directory>
+      <Directory Id="PersonalFolder">
+        <Directory Id="SECRETSDIR" Name=".stonkagents">
+          <Directory Id="DATADIR" Name="data" />
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="StartMenuDir" Name="StonkAgents" />
+      </Directory>
+    </Directory>
+
+    <Feature Id="ProductFeature" Title="StonkAgents Daemon" Level="1">
+      <ComponentGroupRef Id="InstallFiles" />
+      <ComponentRef Id="SetupHelperExe" />
+      <ComponentRef Id="StartMenuShortcut" />
+    </Feature>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <ComponentGroup Id="InstallFiles">
+        <Component Id="DaemonExe" Guid="A1B2C3D4-E5F6-4A5B-8C9D-0E1F2A3B4C5D">
+          <File Id="DaemonExe" Source="$(var.BuildDir)\stonkagents-daemon.exe" KeyPath="yes" />
+        </Component>
+        <Component Id="CliWrapper" Guid="0A1B2C3D-4E5F-6071-8293-A4B5C6D7E8F9">
+          <File Id="CliWrapperFile" Source="$(var.BuildDir)\stonkagents.cmd" KeyPath="yes" />
+        </Component>
+        <Component Id="SvcWrapExe" Guid="F6A7B8C9-D0E1-9F2A-3B4C-5D6E7F8A9B0C">
+          <File Id="SvcWrapExe" Source="$(var.BuildDir)\stonkagents-svc.exe" KeyPath="yes" />
+        </Component>
+        <Component Id="LauncherScript" Guid="B2C3D4E5-F6A7-5B6C-9D0E-1F2A3B4C5D6E">
+          <File Id="LauncherScript" Source="$(var.BuildDir)\start-daemon.ps1" KeyPath="yes" />
+        </Component>
+        <Component Id="GenkeysExe" Guid="C3D4E5F6-A7B8-6C7D-0E1F-2A3B4C5D6E7F">
+          <File Id="GenkeysExe" Source="$(var.BuildDir)\genkeys.exe" KeyPath="yes" />
+        </Component>
+      </ComponentGroup>
+      <Component Id="SetupHelperExe" Guid="D4E5F6A7-B8C9-7D8E-1F2A-3B4C5D6E7F8A">
+        <File Id="SetupHelperExe" Source="$(var.BuildDir)\setuphelper.exe" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="StartMenuDir">
+      <Component Id="StartMenuShortcut" Guid="E5F6A7B8-C9D0-8E9F-2A3B-4C5D6E7F8A9B">
+        <Shortcut Id="StartMenuShortcut" Name="StonkAgents" Description="StonkAgents: P2P knowledge sync for AI agents" Target="[INSTALLDIR]stonkagents.exe" Directory="StartMenuDir" />
+        <RegistryValue Root="HKCU" Key="SOFTWARE\StonkAgents" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <!-- Run installed setuphelper.exe with paths (immediate, after InstallFiles). Quoted so paths with spaces work. Return="ignore" so setuphelper failure does not roll back file copy. -->
+    <CustomAction Id="SetQtExecCmd"
+                  Property="WixQuietExecCmdLine"
+                  Value="&quot;[INSTALLDIR]setuphelper.exe&quot; &quot;[INSTALLDIR];[SECRETSDIR];[DATADIR]&quot;"
+                  Execute="immediate" />
+    <CustomAction Id="CA_RunSetupHelper"
+                  BinaryKey="WixCA"
+                  DllEntry="WixQuietExec"
+                  Execute="immediate"
+                  Return="ignore" />
+
+    <!-- Uninstall: remove service before files (deferred so it runs elevated) -->
+    <SetProperty Id="CA_UninstallService"
+                 Value="[System64Folder]sc.exe delete StonkAgentsDaemon"
+                 Before="CA_UninstallService"
+                 Sequence="execute">
+      REMOVE="ALL"
+    </SetProperty>
+    <CustomAction Id="CA_UninstallService"
+                  BinaryKey="WixCA"
+                  DllEntry="WixQuietExec"
+                  Execute="deferred"
+                  Return="ignore" />
+
+    <!-- Uninstall: drop the "StonkAgents Agent" inbound firewall rule (internal/setup FirewallRuleName); a missing rule is ignored. -->
+    <SetProperty Id="CA_RemoveFirewallRule"
+                 Value="[System64Folder]netsh.exe advfirewall firewall delete rule name=&quot;StonkAgents Agent&quot;"
+                 Before="CA_RemoveFirewallRule"
+                 Sequence="execute">
+      REMOVE="ALL"
+    </SetProperty>
+    <CustomAction Id="CA_RemoveFirewallRule"
+                  BinaryKey="WixCA"
+                  DllEntry="WixQuietExec"
+                  Execute="deferred"
+                  Return="ignore" />
+
+
+    <InstallExecuteSequence>
+      <Custom Action="SetQtExecCmd" Before="CA_RunSetupHelper">NOT Installed</Custom>
+      <Custom Action="CA_RunSetupHelper" After="InstallFiles">NOT Installed</Custom>
+      <Custom Action="CA_UninstallService" Before="RemoveFiles">REMOVE="ALL"</Custom>
+      <Custom Action="CA_RemoveFirewallRule" Before="RemoveFiles">REMOVE="ALL"</Custom>
+    </InstallExecuteSequence>
+
+    <UIRef Id="WixUI_InstallDir" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+  </Product>
+</Wix>

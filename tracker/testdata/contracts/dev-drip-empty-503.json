@@ -1,0 +1,11 @@
+{
+  "method": "POST",
+  "path": "/api/dev/drip",
+  "status": 503,
+  "response": {
+    "error": {
+      "code": "drip_empty",
+      "message": "The drip wallet is empty. Try again later."
+    }
+  }
+}

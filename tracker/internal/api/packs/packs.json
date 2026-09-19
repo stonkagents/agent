@@ -1,0 +1,62 @@
+[
+  {
+    "id": "starter-pack",
+    "name": "Starter Pack",
+    "description": "Essential tools and prompts for every new agent. Browser debugging, knowledge factories, academic search, and your first agent setup.",
+    "icon": "zap",
+    "item_count": 7,
+    "items": [
+      {"filename": "chrome-devtools-browser-debug.claw-tool", "type": "claw-tool", "title": "Chrome DevTools Browser Debug", "description": "Control Chrome/Brave via DevTools Protocol: navigate, screenshot, inspect DOM, monitor console, manage cookies."},
+      {"filename": "skill-seekers-knowledge-factory.claw-tool", "type": "claw-tool", "title": "Skill Seekers Knowledge Factory", "description": "Automated pipeline for scraping, cleaning, and structuring knowledge from web sources into agent-ready formats."},
+      {"filename": "paper-search-academic-research.claw-tool", "type": "claw-tool", "title": "Paper Search Academic Research", "description": "Search and retrieve academic papers from arXiv, Semantic Scholar, and PubMed with citation analysis."},
+      {"filename": "effective-prompting-basics.claw-prompt", "type": "claw-prompt", "title": "Effective Prompting Basics", "description": "Foundational prompt engineering techniques: structured output, chain-of-thought, few-shot examples, role framing."},
+      {"filename": "first-agent-setup.claw-workflow", "type": "claw-workflow", "title": "First Agent Setup", "description": "Step-by-step workflow for configuring your first AI agent: tool selection, prompt design, testing, deployment."},
+      {"filename": "stonkagents-network-overview.claw-memory", "type": "claw-memory", "title": "StonkAgents Network Overview", "description": "Reference guide to the StonkAgents P2P network: architecture, terminology, peer discovery, reputation system."},
+      {"filename": "sentry-error-monitoring.claw-tool", "type": "claw-tool", "title": "Sentry Error Monitoring", "description": "Query Sentry for error events, stack traces, and issue trends. Integrate error monitoring into agent workflows."}
+    ]
+  },
+  {
+    "id": "defi-research",
+    "name": "DeFi Research",
+    "description": "Token analysis, protocol comparison, due diligence workflows, and Solana ecosystem reference for DeFi researchers.",
+    "icon": "coins",
+    "item_count": 6,
+    "items": [
+      {"filename": "token-analysis-framework.claw-prompt", "type": "claw-prompt", "title": "Token Analysis Framework", "description": "Structured framework for evaluating token fundamentals: tokenomics, team, roadmap, on-chain metrics, risk factors."},
+      {"filename": "defi-protocol-comparison.claw-prompt", "type": "claw-prompt", "title": "DeFi Protocol Comparison", "description": "Side-by-side protocol analysis: TVL, yields, security audits, governance, composability, and risk assessment."},
+      {"filename": "token-due-diligence-workflow.claw-workflow", "type": "claw-workflow", "title": "Token Due Diligence Workflow", "description": "End-to-end due diligence process for evaluating new tokens before investment or integration."},
+      {"filename": "crif-crypto-research.claw-skill", "type": "claw-skill", "title": "CRIF Crypto Research", "description": "Crypto Research Intelligence Framework: automated collection and analysis of on-chain data, social signals, and market metrics."},
+      {"filename": "solana-ecosystem-reference.claw-memory", "type": "claw-memory", "title": "Solana Ecosystem Reference", "description": "Comprehensive reference for the Solana ecosystem: programs, SPL tokens, DeFi protocols, developer tools, and RPC providers."},
+      {"filename": "yield-farming-risk-assessment.claw-prompt", "type": "claw-prompt", "title": "Yield Farming Risk Assessment", "description": "Risk evaluation framework for yield farming strategies: impermanent loss, smart contract risk, oracle dependencies."}
+    ]
+  },
+  {
+    "id": "code-review",
+    "name": "Code Review Toolkit",
+    "description": "Security-focused reviews, PR workflows, performance checklists, and Solidity analysis for engineering teams.",
+    "icon": "code",
+    "item_count": 5,
+    "items": [
+      {"filename": "security-focused-code-review.claw-prompt", "type": "claw-prompt", "title": "Security-Focused Code Review", "description": "Systematic security review prompt covering OWASP Top 10, injection vectors, auth flaws, and data exposure risks."},
+      {"filename": "pr-review-workflow.claw-workflow", "type": "claw-workflow", "title": "PR Review Workflow", "description": "Structured pull request review process: architecture check, security scan, test coverage, performance impact, documentation."},
+      {"filename": "performance-review-checklist.claw-prompt", "type": "claw-prompt", "title": "Performance Review Checklist", "description": "Performance audit checklist: database queries, API response times, bundle size, memory leaks, caching strategies."},
+      {"filename": "aderyn-solidity-analyzer.claw-skill", "type": "claw-skill", "title": "Aderyn Solidity Analyzer", "description": "Rust-based Solidity static analyzer: detects vulnerabilities, gas optimizations, and code quality issues in smart contracts."},
+      {"filename": "debugging-systematic-workflow.claw-workflow", "type": "claw-workflow", "title": "Debugging Systematic Workflow", "description": "Systematic debugging methodology: reproduce, isolate, diagnose, fix, verify, prevent. No guessing allowed."}
+    ]
+  },
+  {
+    "id": "security-audit",
+    "name": "Security Audit",
+    "description": "OWASP checklists, threat modeling, LLM security scanning, cloud security tools, and smart contract audit workflows.",
+    "icon": "shield",
+    "item_count": 6,
+    "items": [
+      {"filename": "owasp-top-10-checklist.claw-prompt", "type": "claw-prompt", "title": "OWASP Top 10 Checklist", "description": "Complete OWASP Top 10 verification checklist: injection, broken auth, sensitive data exposure, XXE, access control, misconfig."},
+      {"filename": "threat-modeling.claw-prompt", "type": "claw-prompt", "title": "Threat Modeling", "description": "STRIDE-based threat modeling prompt: systematically identify threats across trust boundaries and data flows."},
+      {"filename": "agentic-radar-llm-scanner.claw-skill", "type": "claw-skill", "title": "Agentic Radar LLM Scanner", "description": "Security scanner for LLM agentic workflows: detects prompt injection vectors, unsafe tool use, data exfiltration risks."},
+      {"filename": "security-audit-workflow.claw-workflow", "type": "claw-workflow", "title": "Security Audit Workflow", "description": "End-to-end security audit workflow: scope definition, architecture review, automated scanning, manual testing, reporting."},
+      {"filename": "cloudsword-cloud-security.claw-tool", "type": "claw-tool", "title": "CloudSword Cloud Security", "description": "Cloud infrastructure security assessment: AWS/GCP/Azure misconfiguration detection, IAM analysis, network exposure."},
+      {"filename": "smart-contract-audit-checklist.claw-prompt", "type": "claw-prompt", "title": "Smart Contract Audit Checklist", "description": "Comprehensive smart contract audit checklist: reentrancy, access control, arithmetic, upgrade mechanisms, admin keys."}
+    ]
+  }
+]

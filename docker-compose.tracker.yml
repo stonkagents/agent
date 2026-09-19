@@ -1,0 +1,31 @@
+# Local tracker + PostgreSQL for development.
+# From repo root: docker compose -f docker-compose.tracker.yml up -d
+# Then: http://localhost:7842/health
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: stonkagents
+      POSTGRES_PASSWORD: stonkagents
+      POSTGRES_DB: stonkagents
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stonkagents -d stonkagents"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  tracker:
+    build:
+      context: .
+      dockerfile: tracker/Dockerfile
+    image: cs-tracker:local
+    environment:
+      DATABASE_URL: "postgres://stonkagents:stonkagents@postgres:5432/stonkagents"
+    ports:
+      - "7842:7842"
+    depends_on:
+      postgres:
+        condition: service_healthy

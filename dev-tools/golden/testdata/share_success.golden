@@ -1,0 +1,8 @@
+# POST /api/v1/share
+# Status: Created (201)
+# Content-Type: application/json
+
+{
+  "cid": "bafkreigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+  "message": "Asset shared successfully"
+}

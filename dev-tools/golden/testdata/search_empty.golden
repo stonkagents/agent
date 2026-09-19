@@ -1,0 +1,8 @@
+# GET /api/v1/search?q=test
+# Status: OK (200)
+# Content-Type: application/json
+
+{
+  "results": [],
+  "total": 0
+}

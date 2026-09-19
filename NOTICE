@@ -1,0 +1,35 @@
+StonkAgents agent
+Copyright 2026 StonkAgents
+
+This product includes software developed by third parties. The Go dependencies are
+declared in go.mod and fetched at build time under their own licenses; the ones a
+running peer depends on most are listed here, together with the non-Go components
+that the installers and tools build against.
+
+go-libp2p, go-libp2p-kad-dht, go-libp2p-pubsub and the multiformats libraries
+  Copyright Protocol Labs and contributors. Dual licensed under MIT and Apache 2.0.
+  https://github.com/libp2p/go-libp2p
+
+go-cid, go-multihash, go-multiaddr
+  Copyright Protocol Labs and contributors. MIT license.
+
+Raydium SDK v2 (@raydium-io/raydium-sdk-v2), used by tools/keeper
+  Copyright Raydium. Distributed under the license published with the package;
+  the keeper depends on it as an npm package and does not vendor it.
+  https://github.com/raydium-io/raydium-sdk-V2
+
+Solana web3.js and spl-token (@solana/web3.js, @solana/spl-token), used by tools/keeper
+  Copyright Solana Labs and contributors. MIT license.
+
+WiX Toolset v6 (WixToolset.Sdk and extensions), used to build installer/wix
+  Copyright .NET Foundation and contributors. Microsoft Reciprocal License (MS-RL).
+  The WiX sources in this repository are ours; the toolset is downloaded at build time.
+  https://wixtoolset.org
+
+Node.js, chained into the Windows setup bundle
+  Copyright Node.js contributors. MIT license and the licenses of its bundled components.
+  https://nodejs.org
+
+Contributor Covenant, the basis of CODE_OF_CONDUCT.md
+  Copyright Coraline Ada Ehmke. Creative Commons Attribution 4.0 International.
+  https://www.contributor-covenant.org

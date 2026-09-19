@@ -1,0 +1,11 @@
+{
+  "method": "GET",
+  "path": "/api/launch/config?quoteMint=So11111111111111111111111111111111111111112",
+  "status": 422,
+  "response": {
+    "error": {
+      "code": "QUOTE_NOT_ALLOWED",
+      "message": "only the $STONK quote is launchable on this platform"
+    }
+  }
+}

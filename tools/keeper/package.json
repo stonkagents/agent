@@ -1,0 +1,32 @@
+{
+  "name": "@stonkagents/keeper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "StonkAgents revenue keeper: platform fee claims, holder-tax distribution, buyback and burn.",
+  "scripts": {
+    "claim-platform-fees": "tsx src/jobs/claim-platform-fees.ts",
+    "distribute-holder-tax": "tsx src/jobs/distribute-holder-tax.ts",
+    "buyback-and-burn": "tsx src/jobs/buyback-and-burn.ts",
+    "all": "tsx src/jobs/all.ts",
+    "flush-queue": "tsx src/jobs/flush-queue.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@raydium-io/raydium-sdk-v2": "0.2.68-alpha",
+    "@solana/spl-token": "^0.4.15",
+    "@solana/web3.js": "^1.95.3",
+    "bn.js": "^5.2.1",
+    "decimal.js": "^10.6.0",
+    "dotenv": "^16.4.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.5",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^5.0.0"
+  }
+}

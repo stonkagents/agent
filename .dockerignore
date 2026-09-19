@@ -1,0 +1,59 @@
+# Git and CI
+.git
+.github
+.gitignore
+
+# Docs and non-tracker code (keep go.mod, go.sum, tracker/)
+docs
+*.md
+!tracker/README.md
+
+# Node / frontend
+node_modules
+npm-debug.log
+.npm
+src
+sdk
+*.ts
+tsconfig.json
+package*.json
+.eslintrc*
+.prettier*
+
+# Environment and secrets (ECS injects via task definition)
+.env
+.env.*
+!.env.example
+
+# Build artifacts and binaries
+bin
+*.exe
+*.dll
+*.dylib
+*.test
+*.out
+
+# IDE and OS
+.idea
+.vscode
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Test and dev
+coverage
+*.log
+.cache
+dev-tools
+
+# Daemon and CLI (tracker image only needs tracker code)
+cmd/cli
+cmd/daemon
+internal/daemon
+internal/config
+
+# Optional: uncomment to shrink context (tracker still builds; these are for other binaries)
+# api
+# pkg
+# internal

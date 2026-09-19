@@ -1,0 +1,11 @@
+{
+  "method": "POST",
+  "path": "/api/launch/record",
+  "status": 422,
+  "response": {
+    "error": {
+      "code": "QUOTE_NOT_ALLOWED",
+      "message": "only the $STONK quote is launchable on this platform"
+    }
+  }
+}

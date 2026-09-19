@@ -1,0 +1,12 @@
+{
+  "method": "POST",
+  "path": "/api/launch/record",
+  "status": 409,
+  "response": {
+    "error": {
+      "code": "LAUNCH_EXISTS",
+      "message": "this wallet already has a recorded launch",
+      "mint": "32akzZ4eJcC1kGphx6pENrhT2JjejYENkuyvmnGSAP3S"
+    }
+  }
+}

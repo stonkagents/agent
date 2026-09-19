@@ -1,0 +1,33 @@
+{
+  "method": "GET",
+  "path": "/api/launch/32akzZ4eJcC1kGphx6pENrhT2JjejYENkuyvmnGSAP3S/candles?interval=1h&limit=100",
+  "status": 200,
+  "response": {
+    "data": [
+      {
+        "t": 1789020000,
+        "o": 0.001,
+        "h": 0.001,
+        "l": 0.001,
+        "c": 0.001,
+        "v": 1
+      },
+      {
+        "t": 1789117200,
+        "o": 0.002,
+        "h": 0.002,
+        "l": 0.002,
+        "c": 0.002,
+        "v": 2
+      },
+      {
+        "t": 1789124400,
+        "o": 0.004,
+        "h": 0.004,
+        "l": 0.004,
+        "c": 0.004,
+        "v": 2
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "method": "POST",
+  "path": "/api/dev/drip",
+  "status": 429,
+  "response": {
+    "error": {
+      "code": "ALREADY_DRIPPED",
+      "message": "This wallet was already dripped in the last 24 hours."
+    },
+    "nextAt": "2026-09-15T12:00:00Z"
+  }
+}

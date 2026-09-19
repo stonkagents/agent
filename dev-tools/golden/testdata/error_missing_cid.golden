@@ -1,0 +1,10 @@
+# POST /api/v1/download
+# Status: Bad Request (400)
+# Content-Type: application/json
+
+{
+  "error": {
+    "code": "MISSING_CID",
+    "message": "CID is required"
+  }
+}
